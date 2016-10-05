@@ -1,2 +1,2 @@
 def answer(input):
-    print("echo:" input)
+    print("echo:", input)
