@@ -2,6 +2,7 @@
 import telebot as tb
 import settings
 import time
+import botDAO
 
 bot = tb.TeleBot(settings.token)
 
@@ -46,3 +47,12 @@ def send_welcome(message):
 
 if __name__ == '__main__':
     bot.polling()
+
+
+
+####################
+
+
+
+
+
