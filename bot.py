@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import telebot as tb
 import settings
 import time
