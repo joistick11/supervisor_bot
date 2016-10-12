@@ -1,17 +1,22 @@
-import telebot
-# Установить telebot: Заходим в Командную строку Windows
-#  pip install telebot
+import telepot
 import settings
+import time
+
 
 # Адрес нашего бота: telegram.me/science_supervisor_bot
 
-bot = telebot.TeleBot(settings.token)
+def handle(msg):
+    flavor = telepot.flavor(msg)
+    summary = telepot.glance(msg, flavor=flavor)
+    print(flavor, summary)
 
 
-@bot.message_handler(content_types=["text"])
-def repeat_all_messages(message):
-    bot.send_message(message.chat.id, message.text)
+TOKEN = settings.token
 
+bot = telepot.Bot(TOKEN)
+bot.message_loop(handle)
 
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
+print('Listening...')
+
+while 1:
+    time.sleep(10)
