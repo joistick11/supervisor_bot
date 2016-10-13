@@ -1,0 +1,1 @@
+INSERT INTO bot_table VALUES(%s, %s)
