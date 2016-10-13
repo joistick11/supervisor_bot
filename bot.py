@@ -2,9 +2,12 @@
 import telebot as tb
 import settings
 import time
-import botDAO
+import botDB
+import logging
 
 bot = tb.TeleBot(settings.token)
+logger = tb.logger
+tb.logger.setLevel(logging.DEBUG)
 
 
 def extract_unique_code(text):
@@ -14,19 +17,22 @@ def extract_unique_code(text):
     return text.split()[1] if len(text.split()) > 1 else None
 
 
-def in_storage(unique_code):
+def in_storage(user_id):
     # TODO: Should check if unique code exists in storage
+    botDB.check_user_id(user_id)
     pass
 
 
-def get_username_from_storage(unique_code):
+def get_username_from_storage(user_id):
     # TODO: Does a query to the storage, retrieving the assosiated username
     # FIXME: Should be replaced with real database lookup
-    return "ABC" if in_storage(unique_code) else None
+    botDB.get_username_by_id(user_id)
+    return "ABC" if in_storage(user_id) else None
 
 
 def save_chat_id(chat_id, username):
     # TODO: Save chat_id->username to storage
+
     pass
 
 
@@ -47,6 +53,3 @@ def send_welcome(message):
 
 if __name__ == '__main__':
     bot.polling()
-
-
-
