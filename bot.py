@@ -7,47 +7,30 @@ import logging
 
 bot = tb.TeleBot(settings.token)
 logger = tb.logger
-tb.logger.setLevel(logging.DEBUG)
+tb.logger.setLevel(logging.ERROR)
 
 
-def extract_unique_code(text):
-    """
-        Extracts the unique code from the sent '/start' command
-    """
-    return text.split()[1] if len(text.split()) > 1 else None
-
-
-def in_storage(user_id):
-    # TODO: Should check if unique code exists in storage
-    botDB.check_user_id(user_id)
+def save_new_user(message):
+    botDB.store_new_user_into_db(message.from_user.id,
+                                 message.from_user.username,
+                                 message.from_user.first_name,
+                                 message.from_user.last_name)
     pass
 
 
-def get_username_from_storage(user_id):
-    # TODO: Does a query to the storage, retrieving the assosiated username
-    # FIXME: Should be replaced with real database lookup
-    botDB.get_username_by_id(user_id)
-    return "ABC" if in_storage(user_id) else None
-
-
-def save_chat_id(chat_id, username):
-    # TODO: Save chat_id->username to storage
-
-    pass
+def check_user_exists(message):
+    return botDB.check_user_id_exists(message.from_user.id)
 
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    unique_code = extract_unique_code(message.text)
-    if unique_code:
-        username = get_username_from_storage(unique_code)
-        if username:  # if the username exists in our database
-            save_chat_id(message.chat_id, username)
-            reply = 'Hello {0}, how are you?'.format(username)
-        else:
-            reply = 'I have no clue who you are'
+    username = message.from_user.username
+    if check_user_exists(message):  # if the username exists in our database
+        # save_chat_id(message.chat_id, username)
+        reply = 'Hello {0}, how are you? Nice to meet you again'.format(username)
     else:
-        reply = 'Please visit me via a provided URL from the website.'
+        save_new_user(message)
+        reply = '{0}, first time? Huh'.format(username)
     bot.reply_to(message, reply)
 
 
