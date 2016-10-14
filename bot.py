@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import telebot as tb
 import settings
-import time
+import datetime
 import botDB
 import logging
 
@@ -10,12 +10,22 @@ logger = tb.logger
 tb.logger.setLevel(logging.ERROR)
 
 
+def listener(messages):
+    for m in messages:
+        botDB.store_message(m.message_id,
+                            m.from_user.id,
+                            m.date,
+                            m.text)
+
+
+bot.set_update_listener(listener)
+
+
 def save_new_user(message):
     botDB.store_new_user_into_db(message.from_user.id,
                                  message.from_user.username,
                                  message.from_user.first_name,
                                  message.from_user.last_name)
-    pass
 
 
 def check_user_exists(message):
