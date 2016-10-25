@@ -17,6 +17,7 @@ import nltk.corpus as crp
 # @bot.message_handler(content_types=['document'])
 # def handle_docs(message):
 #     keywords = find_keywords(bot.get_file(message.document.file_id), settings.keywords_finder_bot_token, 10)
+#     bot.send_message(message.chat.id, ', '.join(keywords))
 nltk.download("stopwords")
 def find_keywords(path, token, n):
     template = "https://api.telegram.org/file/bot{0}/{1}"
@@ -24,7 +25,7 @@ def find_keywords(path, token, n):
     text = file.text.encode("ISO-8859-1").decode("utf-8")
     tokenizer = tkn.RegexpTokenizer(r'\w+')
     tokens = tokenizer.tokenize(text)
-    stopwords = crp.stopwords.words('russian')
+    stopwords = crp.stopwords.words('russian') + crp.stopwords.words('english')
     tokens = [i for i in tokens if ( i not in stopwords )]
     analyzer = morph.MorphAnalyzer()
     words = []
