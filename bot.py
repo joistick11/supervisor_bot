@@ -3,7 +3,7 @@ import settings
 from google import search
 import google
 import urllib.request as urllib2
-import simplejson
+
 
 bot = telebot.TeleBot(settings.token)
 
@@ -65,27 +65,21 @@ def handle_show(message):
         img1.close()
         bot.send_photo(message.chat.id, img2)
         img2.close()
-    elif message.text[8:] == 'жабку':
-        img1 = open('frog1.jpg', 'rb')
+    elif message.text[8:] == 'программиста':
+        img1 = open('programmer1.jpg', 'rb')
+        img2 = open('programmer2.jpg', 'rb')
         bot.send_chat_action(message.chat.id, 'upload_photo')
         bot.send_photo(message.chat.id, img1)
         img1.close()
-        
+        bot.send_photo(message.chat.id, img2)
+        img2.close()
+
 
 
 
 @bot.message_handler(content_types=["text"])
 def search_message(message):
-    if message.text == 'фото':
-        url2 = google.search_images(message.text, stop = 1)
-        print (url2)
-        url1 = 'http://19201080.ru/kosmos/22-kosmos-oboi-kartinki-foto-1920x1080.jpg'
-        urllib2.urlretrieve(url1,'url_image.jpg')
-        img = open('url_image.jpg','rb')
-        bot.send_chat_action(message.chat.id, 'upload_photo')
-        bot.send_photo(message.chat.id,img)
-        img.close()
-    else:
+    if message.text == 'фото' or message.text == 'аудио':
         i = 0
         bot.send_message(message.chat.id, "По запросу " + message.text + " я нашел это:")
         for url in search(message.text, stop=1):
