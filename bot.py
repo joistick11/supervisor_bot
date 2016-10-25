@@ -1,16 +1,99 @@
 import telebot
-# Установить telebot: Заходим в Командную строку Windows
-#  pip install telebot
 import settings
-
-# Адрес нашего бота: telegram.me/science_supervisor_bot
+from google import search
+import google
+import urllib.request as urllib2
+import simplejson
 
 bot = telebot.TeleBot(settings.token)
 
+@bot.message_handler(commands=['start'])
+def handle_start(message):
+    user_markup = telebot.types.ReplyKeyboardMarkup(True)
+    user_markup.row('фото', 'аудио')
+    bot.send_message(message.chat.id,"Привет! Желаешь найти что-нибудь?", reply_markup=user_markup)
+
+@bot.message_handler(commands=['найти'])
+def handle_search(message):
+    i = 0
+    bot.send_message(message.chat.id, "По запросу " + message.text[7:] + " я нашел это:")
+    for url in search(message.text[7:], stop=1):
+        bot.send_message(message.chat.id, url)
+        i = i + 1
+        if i == 5:
+            break
+    bot.send_message(message.chat.id, "Хотите найти еще что-нибудь?")
+    #bot.send_message(message.chat.id, message.text[7:])
+
+@bot.message_handler(commands=['покажи'])
+def handle_show(message):
+    if message.text[8:] == 'кошку' or message.text[8:] == 'кота' or message.text[8:] == 'котят':
+        img1 = open('cat1.jpg', 'rb')
+        img2 = open('cat2.jpg', 'rb')
+        img3 = open('cat3.jpg', 'rb')
+        bot.send_chat_action(message.chat.id, 'upload_photo')
+        bot.send_photo(message.chat.id, img1)
+        img1.close()
+        bot.send_photo(message.chat.id, img2)
+        img2.close()
+        bot.send_photo(message.chat.id, img3)
+        img3.close()
+    elif message.text[8:] == 'автомобиль' or message.text[8:] == 'машину':
+        img1 = open('car1.jpg', 'rb')
+        img2 = open('car2.jpg', 'rb')
+        img3 = open('car3.jpg', 'rb')
+        bot.send_chat_action(message.chat.id, 'upload_photo')
+        bot.send_photo(message.chat.id, img1)
+        img1.close()
+        bot.send_photo(message.chat.id, img2)
+        img2.close()
+        bot.send_photo(message.chat.id, img3)
+        img3.close()
+    elif message.text[8:] == 'космос' or message.text[8:] == 'галактику':
+        img1 = open('space1.jpg', 'rb')
+        img2 = open('space2.jpg', 'rb')
+        bot.send_chat_action(message.chat.id, 'upload_photo')
+        bot.send_photo(message.chat.id, img1)
+        img1.close()
+        bot.send_photo(message.chat.id, img2)
+        img2.close()
+    elif message.text[8:] == 'природу':
+        img1 = open('nature1.jpg', 'rb')
+        img2 = open('nature2.jpg', 'rb')
+        bot.send_chat_action(message.chat.id, 'upload_photo')
+        bot.send_photo(message.chat.id, img1)
+        img1.close()
+        bot.send_photo(message.chat.id, img2)
+        img2.close()
+    elif message.text[8:] == 'жабку':
+        img1 = open('frog1.jpg', 'rb')
+        bot.send_chat_action(message.chat.id, 'upload_photo')
+        bot.send_photo(message.chat.id, img1)
+        img1.close()
+        
+
+
 
 @bot.message_handler(content_types=["text"])
-def repeat_all_messages(message):
-    bot.send_message(message.chat.id, message.text)
+def search_message(message):
+    if message.text == 'фото':
+        url2 = google.search_images(message.text, stop = 1)
+        print (url2)
+        url1 = 'http://19201080.ru/kosmos/22-kosmos-oboi-kartinki-foto-1920x1080.jpg'
+        urllib2.urlretrieve(url1,'url_image.jpg')
+        img = open('url_image.jpg','rb')
+        bot.send_chat_action(message.chat.id, 'upload_photo')
+        bot.send_photo(message.chat.id,img)
+        img.close()
+    else:
+        i = 0
+        bot.send_message(message.chat.id, "По запросу " + message.text + " я нашел это:")
+        for url in search(message.text, stop=1):
+            bot.send_message(message.chat.id, url)
+            i = i + 1
+            if i == 5:
+                break
+
 
 
 if __name__ == '__main__':
